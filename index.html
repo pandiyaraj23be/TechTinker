@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechTinker - Practical Web Utilities</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🛠️ TechTinker</h1>
+            <p class="tagline">Your toolkit for practical calculations and learning tools</p>
+        </div>
+    </header>
+
+    <nav class="tab-navigation">
+        <div class="container">
+            <button class="tab-button active" onclick="showTab('home-loan')">Home Loan EMI</button>
+            <button class="tab-button" onclick="showTab('personal-loan')">Personal Loan</button>
+            <button class="tab-button" onclick="showTab('worksheet')">Kids Worksheets</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Home Loan EMI Calculator -->
+        <section id="home-loan" class="tab-content active">
+            <h2>Home Loan EMI Calculator</h2>
+            <p class="description">Calculate your monthly home loan EMI (Equated Monthly Installment)</p>
+            
+            <div class="calculator">
+                <div class="input-group">
+                    <label for="home-loan-amount">Loan Amount (₹)</label>
+                    <input type="number" id="home-loan-amount" placeholder="e.g., 5000000" min="0" step="10000">
+                </div>
+                
+                <div class="input-group">
+                    <label for="home-interest-rate">Annual Interest Rate (%)</label>
+                    <input type="number" id="home-interest-rate" placeholder="e.g., 8.5" min="0" max="30" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="home-loan-tenure">Loan Tenure (Years)</label>
+                    <input type="number" id="home-loan-tenure" placeholder="e.g., 20" min="1" max="30" step="1">
+                </div>
+                
+                <button class="calculate-btn" onclick="calculateHomeLoanEMI()">Calculate EMI</button>
+                
+                <div id="home-loan-result" class="result hidden">
+                    <h3>Results</h3>
+                    <div class="result-item">
+                        <span class="result-label">Monthly EMI:</span>
+                        <span id="home-emi" class="result-value"></span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Interest:</span>
+                        <span id="home-total-interest" class="result-value"></span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Amount Payable:</span>
+                        <span id="home-total-amount" class="result-value"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Personal Loan Calculator -->
+        <section id="personal-loan" class="tab-content">
+            <h2>Personal Loan Calculator</h2>
+            <p class="description">Calculate your personal loan EMI and total cost</p>
+            
+            <div class="calculator">
+                <div class="input-group">
+                    <label for="personal-loan-amount">Loan Amount (₹)</label>
+                    <input type="number" id="personal-loan-amount" placeholder="e.g., 200000" min="0" step="1000">
+                </div>
+                
+                <div class="input-group">
+                    <label for="personal-interest-rate">Annual Interest Rate (%)</label>
+                    <input type="number" id="personal-interest-rate" placeholder="e.g., 12" min="0" max="40" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="personal-loan-tenure">Loan Tenure (Months)</label>
+                    <input type="number" id="personal-loan-tenure" placeholder="e.g., 24" min="1" max="84" step="1">
+                </div>
+                
+                <button class="calculate-btn" onclick="calculatePersonalLoanEMI()">Calculate EMI</button>
+                
+                <div id="personal-loan-result" class="result hidden">
+                    <h3>Results</h3>
+                    <div class="result-item">
+                        <span class="result-label">Monthly EMI:</span>
+                        <span id="personal-emi" class="result-value"></span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Interest:</span>
+                        <span id="personal-total-interest" class="result-value"></span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Amount Payable:</span>
+                        <span id="personal-total-amount" class="result-value"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Worksheet Creator for Kids -->
+        <section id="worksheet" class="tab-content">
+            <h2>Worksheet Creator for Kids</h2>
+            <p class="description">Generate practice worksheets for kids to learn math</p>
+            
+            <div class="calculator worksheet-creator">
+                <div class="input-group">
+                    <label for="worksheet-type">Worksheet Type</label>
+                    <select id="worksheet-type">
+                        <option value="addition">Addition</option>
+                        <option value="subtraction">Subtraction</option>
+                        <option value="multiplication">Multiplication</option>
+                        <option value="division">Division</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="difficulty-level">Difficulty Level</label>
+                    <select id="difficulty-level">
+                        <option value="easy">Easy (1-10)</option>
+                        <option value="medium">Medium (1-50)</option>
+                        <option value="hard">Hard (1-100)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="num-problems">Number of Problems</label>
+                    <input type="number" id="num-problems" value="10" min="5" max="20" step="1">
+                </div>
+                
+                <button class="calculate-btn" onclick="generateWorksheet()">Generate Worksheet</button>
+                
+                <div id="worksheet-output" class="worksheet-output hidden">
+                    <div class="worksheet-header">
+                        <h3>Practice Worksheet</h3>
+                        <button class="print-btn" onclick="window.print()">🖨️ Print Worksheet</button>
+                    </div>
+                    <div id="worksheet-problems" class="worksheet-problems"></div>
+                    <button class="show-answers-btn" onclick="toggleAnswers()">Show Answers</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 TechTinker. A toolkit of practical web utilities for everyone.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
