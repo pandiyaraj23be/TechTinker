@@ -1,5 +1,5 @@
 // Tab Navigation
-function showTab(tabId) {
+function showTab(tabId, event) {
     // Hide all tab contents
     const tabContents = document.querySelectorAll('.tab-content');
     tabContents.forEach(content => content.classList.remove('active'));
@@ -12,7 +12,9 @@ function showTab(tabId) {
     document.getElementById(tabId).classList.add('active');
 
     // Add active class to clicked button
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
 }
 
 // Home Loan EMI Calculator
@@ -30,12 +32,20 @@ function calculateHomeLoanEMI() {
     const monthlyRate = annualRate / 12 / 100;
     const tenureMonths = tenureYears * 12;
 
-    // EMI Formula: P * r * (1 + r)^n / ((1 + r)^n - 1)
-    const emi = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths) / 
-                (Math.pow(1 + monthlyRate, tenureMonths) - 1);
-
-    const totalAmount = emi * tenureMonths;
-    const totalInterest = totalAmount - loanAmount;
+    let emi, totalAmount, totalInterest;
+    
+    // Handle 0% interest rate case
+    if (annualRate === 0) {
+        emi = loanAmount / tenureMonths;
+        totalAmount = loanAmount;
+        totalInterest = 0;
+    } else {
+        // EMI Formula: P * r * (1 + r)^n / ((1 + r)^n - 1)
+        emi = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths) / 
+                    (Math.pow(1 + monthlyRate, tenureMonths) - 1);
+        totalAmount = emi * tenureMonths;
+        totalInterest = totalAmount - loanAmount;
+    }
 
     // Display results
     document.getElementById('home-emi').textContent = formatCurrency(emi);
@@ -58,12 +68,20 @@ function calculatePersonalLoanEMI() {
     // Convert annual rate to monthly rate
     const monthlyRate = annualRate / 12 / 100;
 
-    // EMI Formula: P * r * (1 + r)^n / ((1 + r)^n - 1)
-    const emi = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths) / 
-                (Math.pow(1 + monthlyRate, tenureMonths) - 1);
-
-    const totalAmount = emi * tenureMonths;
-    const totalInterest = totalAmount - loanAmount;
+    let emi, totalAmount, totalInterest;
+    
+    // Handle 0% interest rate case
+    if (annualRate === 0) {
+        emi = loanAmount / tenureMonths;
+        totalAmount = loanAmount;
+        totalInterest = 0;
+    } else {
+        // EMI Formula: P * r * (1 + r)^n / ((1 + r)^n - 1)
+        emi = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths) / 
+                    (Math.pow(1 + monthlyRate, tenureMonths) - 1);
+        totalAmount = emi * tenureMonths;
+        totalInterest = totalAmount - loanAmount;
+    }
 
     // Display results
     document.getElementById('personal-emi').textContent = formatCurrency(emi);
@@ -93,8 +111,8 @@ function generateWorksheet() {
 
     const problems = [];
     for (let i = 0; i < numProblems; i++) {
-        const num1 = Math.floor(Math.random() * maxNumber) + 1;
-        const num2 = Math.floor(Math.random() * maxNumber) + 1;
+        const num1 = getRandomNumber(maxNumber);
+        const num2 = getRandomNumber(maxNumber);
         
         let problem, answer;
         switch (type) {
@@ -111,15 +129,15 @@ function generateWorksheet() {
                 break;
             case 'multiplication':
                 // Use smaller numbers for multiplication
-                const m1 = Math.floor(Math.random() * (maxNumber / 5)) + 1;
-                const m2 = Math.floor(Math.random() * (maxNumber / 5)) + 1;
+                const m1 = getRandomNumber(Math.floor(maxNumber / 5));
+                const m2 = getRandomNumber(Math.floor(maxNumber / 5));
                 problem = `${m1} × ${m2} = ___`;
                 answer = m1 * m2;
                 break;
             case 'division':
                 // Create problems that divide evenly
-                const divisor = Math.floor(Math.random() * (maxNumber / 5)) + 1;
-                const quotient = Math.floor(Math.random() * (maxNumber / 5)) + 1;
+                const divisor = getRandomNumber(Math.floor(maxNumber / 5));
+                const quotient = getRandomNumber(Math.floor(maxNumber / 5));
                 const dividend = divisor * quotient;
                 problem = `${dividend} ÷ ${divisor} = ___`;
                 answer = quotient;
@@ -174,7 +192,15 @@ function toggleAnswers() {
 
 // Helper function to format currency
 function formatCurrency(amount) {
-    return '₹' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    const formatted = amount.toFixed(2);
+    const parts = formatted.split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return '₹' + parts.join('.');
+}
+
+// Helper function to get random number for worksheets
+function getRandomNumber(max) {
+    return Math.floor(Math.random() * max) + 1;
 }
 
 // Initialize on page load
